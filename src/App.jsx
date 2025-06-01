@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import { getToken } from "./util";
+import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
 import Search from "./components/Search";
 import Artists from "./components/Artists";
 import Albums from "./components/Albums";
-import { useArtistAlbums } from "./hooks/useArtistAlbums";
+import Tracks from "./components/Tracks";
+import useSpotifyDetails from "./hooks/useSpotifyDetails";
 
 function App() {
   const [token, setToken] = useState(null);
   const [artists, setArtists] = useState([]);
+
+  const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
+  const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
 
   useEffect(() => {
     let ignore = false;
@@ -21,19 +25,13 @@ function App() {
     };
   }, []);
 
-  const {
-    selectedArtist,
-    albums,
-    isAlbumsLoading,
-    showAlbumsError,
-    showArtistAlbums,
-  } = useArtistAlbums(token, artists);
-
   const handleAddClick = (artist) => {
-    const isAdded = artists.find((a) => a.id === artist.id);
-    setArtists(
-      isAdded ? artists.filter((a) => a.id !== artist.id) : [...artists, artist]
-    );
+    const exists = artists.find((a) => a.id === artist.id);
+    if (exists) {
+      setArtists(artists.filter((a) => a.id !== artist.id));
+    } else {
+      setArtists([...artists, artist]);
+    }
   };
 
   return (
@@ -42,13 +40,21 @@ function App() {
       <Artists
         artists={artists}
         onRemoveArtist={handleAddClick}
-        onSelectArtist={showArtistAlbums}
+        onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
       />
-      {selectedArtist && (
+      {artistAlbums.selectedItem && (
         <Albums
-          isAlbumsLoading={isAlbumsLoading}
-          showAlbumsError={showAlbumsError}
-          albums={albums}
+          albums={artistAlbums.data}
+          isLoading={artistAlbums.isLoading}
+          error={artistAlbums.error}
+          onSelectAlbum={(id) => albumTracks.showDetails(id, artistAlbums.data)}
+        />
+      )}
+      {albumTracks.selectedItem && (
+        <Tracks
+          tracks={albumTracks.data}
+          isLoading={albumTracks.isLoading}
+          error={albumTracks.error}
         />
       )}
     </>

@@ -65,8 +65,27 @@ export const getArtistAlbums = async (accessToken, id) => {
       headers: { Authorization: `Bearer ${accessToken}` },
     }
   );
-  const json = await response.json();
-  return json;
+  const data = await response.json();
+  return data.items.map((album) => ({
+    id: album.id,
+    name: album.name,
+  }));
+};
+
+export const getAlbumTracks = async (token, albumId) => {
+  const response = await fetch(
+    `https://api.spotify.com/v1/albums/${albumId}/tracks`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const data = await response.json();
+  return data.items.map((track) => ({
+    id: track.id,
+    name: track.name,
+  }));
 };
 
 export const findById = (id, array) => {
