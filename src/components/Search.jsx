@@ -1,6 +1,6 @@
 import SearchBar from "./SearchBar";
 import SearchResult from "./SearchResults";
-import { searchArtist } from "../../util";
+import { searchArtist } from "../util";
 import { useState } from "react";
 
 export default function Search({ accessToken, onAddArtist }) {
@@ -14,7 +14,11 @@ export default function Search({ accessToken, onAddArtist }) {
         return;
       }
       const data = await searchArtist(query, accessToken, 3);
-      setResults(data.artists.items.map((artist) => artist.name));
+      setResults(
+        data.artists.items.map((artist) => {
+          return { name: artist.name, id: artist.id };
+        })
+      );
       setIsLoading(false);
     } catch (e) {
       setError(e);

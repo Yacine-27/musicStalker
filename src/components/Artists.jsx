@@ -1,15 +1,24 @@
-export default function Artists({ artists, onAddArtist }) {
+export default function Artists({ artists, onRemoveArtist, onSelectArtist }) {
   return (
     <>
       {artists.length > 0 && <h3>Artists : </h3>}
       <ul>
         {artists.map((artist) => (
-          <li key={artist}>
+          <li key={artist.id}>
             {" "}
-            {artist}{" "}
+            {artist.name}{" "}
             <button
+              type="button"
               onClick={() => {
-                onAddArtist(artist);
+                onSelectArtist(artist.id);
+              }}
+            >
+              Show Albums
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onRemoveArtist(artist);
               }}
             >
               Remove

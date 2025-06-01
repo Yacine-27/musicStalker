@@ -58,4 +58,17 @@ export const searchArtist = async (query, accessToken, limit) => {
   return data;
 };
 
-//TODO: Save id and secret in .env
+export const getArtistAlbums = async (accessToken, id) => {
+  const response = await fetch(
+    `https://api.spotify.com/v1/artists/${id}/albums`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
+  );
+  const json = await response.json();
+  return json;
+};
+
+export const findById = (id, array) => {
+  return array.find((item) => item.id === id);
+};
