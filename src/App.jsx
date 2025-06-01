@@ -33,7 +33,14 @@ function App() {
       setArtists([...artists, artist]);
     }
   };
-
+  const handleListenClick = (trackId) => {
+    albumTracks.setData(
+      albumTracks.data.map((track) => {
+        if (track.id !== trackId) return track;
+        return { ...track, listenedTo: !track.listenedTo };
+      })
+    );
+  };
   return (
     <>
       <Search accessToken={token} onAddArtist={handleAddClick} />
@@ -55,6 +62,7 @@ function App() {
           tracks={albumTracks.data}
           isLoading={albumTracks.isLoading}
           error={albumTracks.error}
+          onListen={handleListenClick}
         />
       )}
     </>

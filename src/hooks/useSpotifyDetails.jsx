@@ -12,8 +12,6 @@ const useSpotifyDetails = (fetchFn) => {
       setIsLoading(true);
       setError(null);
       const response = await fetchFn(id);
-
-      // The transform of response to usable format should be done outside (or could be customizable)
       setData(response);
       setSelectedItem(findById(id, sourceList));
     } catch (e) {
@@ -30,6 +28,7 @@ const useSpotifyDetails = (fetchFn) => {
     isLoading,
     error,
     showDetails,
+    setData,
   };
 };
 

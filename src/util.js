@@ -85,6 +85,7 @@ export const getAlbumTracks = async (token, albumId) => {
   return data.items.map((track) => ({
     id: track.id,
     name: track.name,
+    listenedTo: false,
   }));
 };
 
