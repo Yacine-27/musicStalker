@@ -3,8 +3,9 @@ import { useState } from "react";
 export default function SearchBar({ onQueryChange }) {
   const [query, setQuery] = useState("");
   const handleQueryChange = (e) => {
-    setQuery(e.target.value);
-    onQueryChange(query);
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    onQueryChange(newQuery);
   };
   return (
     <form

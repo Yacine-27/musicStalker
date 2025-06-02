@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  getToken,
-  getArtistAlbums,
-  getAlbumTracks,
-  getArtistsInfo,
-} from "./util";
+import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
 import Search from "./components/Search";
 import Artists from "./components/Artists";
 import Albums from "./components/Albums";
 import Tracks from "./components/Tracks";
 import useSpotifyDetails from "./hooks/useSpotifyDetails";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [token, setToken] = useState(null);
   const [artists, setArtists] = useState([]);
-  const [localStorageLoaded, setLocalStorageLoaded] = useState(false);
   const [listenedSongs, setListenedSongs] = useState({});
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
+  useLocalStorage(token, artists, listenedSongs, setArtists, setListenedSongs);
 
   useEffect(() => {
     let ignore = false;
@@ -30,34 +26,6 @@ function App() {
       ignore = true;
     };
   }, []);
-  useEffect(() => {
-    const fetchSavedArtists = async () => {
-      const artistsIds = JSON.parse(savedArtists);
-      const artists = await getArtistsInfo(artistsIds, token);
-      setArtists(artists);
-      setLocalStorageLoaded(true);
-    };
-    const savedArtists = localStorage.getItem("selectedArtists");
-    if (token && savedArtists) {
-      fetchSavedArtists();
-    }
-    const savedSongs = localStorage.getItem("listenedSongs");
-    if (savedSongs) {
-      setListenedSongs(JSON.parse(savedSongs));
-    }
-  }, [token]);
-  useEffect(() => {
-    if (localStorageLoaded) {
-      const artistsIds = artists.map((artist) => artist.id);
-      localStorage.setItem("selectedArtists", JSON.stringify(artistsIds));
-    }
-  }, [artists, localStorageLoaded]);
-
-  useEffect(() => {
-    if (localStorageLoaded) {
-      localStorage.setItem("listenedSongs", JSON.stringify(listenedSongs));
-    }
-  }, [listenedSongs, localStorageLoaded]);
 
   const handleAddClick = (artist) => {
     const exists = artists.find((a) => a.id === artist.id);
