@@ -28,12 +28,18 @@ export const getToken = async () => {
 const getArtist = async (id, accessToken) => {
   if (!accessToken) throw new Error("No access token generated");
   const response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
-    headers: { Authorization: `Bearer  ${accessToken}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
   handleResponse(response);
 
-  const json = await response.json();
-  return json;
+  const data = await response.json();
+  return { name: data.name, id: data.id };
+};
+
+export const getArtistsInfo = async (artistsIds, token) => {
+  const promises = artistsIds.map((id) => getArtist(id, token));
+  const artists = await Promise.all(promises);
+  return artists;
 };
 
 const search = async (query, accessToken) => {

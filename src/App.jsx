@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
+import {
+  getToken,
+  getArtistAlbums,
+  getAlbumTracks,
+  getArtistsInfo,
+} from "./util";
 import Search from "./components/Search";
 import Artists from "./components/Artists";
 import Albums from "./components/Albums";
@@ -25,21 +30,26 @@ function App() {
       ignore = true;
     };
   }, []);
-
   useEffect(() => {
+    const fetchSavedArtists = async () => {
+      const artistsIds = JSON.parse(savedArtists);
+      const artists = await getArtistsInfo(artistsIds, token);
+      setArtists(artists);
+      setLocalStorageLoaded(true);
+    };
     const savedArtists = localStorage.getItem("selectedArtists");
-    if (savedArtists) {
-      setArtists(JSON.parse(savedArtists));
+    if (token && savedArtists) {
+      fetchSavedArtists();
     }
     const savedSongs = localStorage.getItem("listenedSongs");
     if (savedSongs) {
       setListenedSongs(JSON.parse(savedSongs));
     }
-    setLocalStorageLoaded(true);
-  }, []);
+  }, [token]);
   useEffect(() => {
     if (localStorageLoaded) {
-      localStorage.setItem("selectedArtists", JSON.stringify(artists));
+      const artistsIds = artists.map((artist) => artist.id);
+      localStorage.setItem("selectedArtists", JSON.stringify(artistsIds));
     }
   }, [artists, localStorageLoaded]);
 
