@@ -28,7 +28,6 @@ const useSpotifyDetails = (fetchFn) => {
     isLoading,
     error,
     showDetails,
-    setData,
   };
 };
 

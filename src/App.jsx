@@ -9,7 +9,8 @@ import useSpotifyDetails from "./hooks/useSpotifyDetails";
 function App() {
   const [token, setToken] = useState(null);
   const [artists, setArtists] = useState([]);
-
+  const [localStorageLoaded, setLocalStorageLoaded] = useState(false);
+  const [listenedSongs, setListenedSongs] = useState({});
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
 
@@ -25,6 +26,29 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const savedArtists = localStorage.getItem("selectedArtists");
+    if (savedArtists) {
+      setArtists(JSON.parse(savedArtists));
+    }
+    const savedSongs = localStorage.getItem("listenedSongs");
+    if (savedSongs) {
+      setListenedSongs(JSON.parse(savedSongs));
+    }
+    setLocalStorageLoaded(true);
+  }, []);
+  useEffect(() => {
+    if (localStorageLoaded) {
+      localStorage.setItem("selectedArtists", JSON.stringify(artists));
+    }
+  }, [artists, localStorageLoaded]);
+
+  useEffect(() => {
+    if (localStorageLoaded) {
+      localStorage.setItem("listenedSongs", JSON.stringify(listenedSongs));
+    }
+  }, [listenedSongs, localStorageLoaded]);
+
   const handleAddClick = (artist) => {
     const exists = artists.find((a) => a.id === artist.id);
     if (exists) {
@@ -33,13 +57,8 @@ function App() {
       setArtists([...artists, artist]);
     }
   };
-  const handleListenClick = (trackId) => {
-    albumTracks.setData(
-      albumTracks.data.map((track) => {
-        if (track.id !== trackId) return track;
-        return { ...track, listenedTo: !track.listenedTo };
-      })
-    );
+  const handleToggleListened = (trackId) => {
+    setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
   return (
     <>
@@ -62,7 +81,8 @@ function App() {
           tracks={albumTracks.data}
           isLoading={albumTracks.isLoading}
           error={albumTracks.error}
-          onListen={handleListenClick}
+          onToggleListened={handleToggleListened}
+          listenedSongs={listenedSongs}
         />
       )}
     </>
