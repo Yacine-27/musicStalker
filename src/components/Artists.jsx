@@ -1,4 +1,10 @@
-export default function Artists({ artists, onRemoveArtist, onSelectArtist }) {
+export default function Artists({
+  artists,
+  onRemoveArtist,
+  onSelectArtist,
+  isLoadingArtists,
+}) {
+  if (isLoadingArtists) return <p>Loading artists ...</p>;
   return (
     <>
       {artists.length > 0 && <h3>Artists : </h3>}

@@ -8,12 +8,13 @@ export default function useLocalStorage(
   setListenedSongs
 ) {
   const [localStorageLoaded, setLocalStorageLoaded] = useState(false);
-
+  const [isLoadingArtists, setIsLoadingArtists] = useState(true);
   useEffect(() => {
     const fetchSavedArtists = async () => {
       const artistsIds = JSON.parse(savedArtists);
       const artists = await getArtistsInfo(artistsIds, token);
       setArtists(artists);
+      setIsLoadingArtists(false);
       setLocalStorageLoaded(true);
     };
     const savedArtists = localStorage.getItem("selectedArtists");
@@ -37,4 +38,5 @@ export default function useLocalStorage(
       localStorage.setItem("listenedSongs", JSON.stringify(listenedSongs));
     }
   }, [listenedSongs, localStorageLoaded]);
+  return { isLoadingArtists };
 }

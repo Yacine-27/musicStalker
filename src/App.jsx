@@ -13,7 +13,13 @@ function App() {
   const [listenedSongs, setListenedSongs] = useState({});
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
-  useLocalStorage(token, artists, listenedSongs, setArtists, setListenedSongs);
+  const { isLoadingArtists } = useLocalStorage(
+    token,
+    artists,
+    listenedSongs,
+    setArtists,
+    setListenedSongs
+  );
 
   useEffect(() => {
     let ignore = false;
@@ -43,6 +49,7 @@ function App() {
       <Search accessToken={token} onAddArtist={handleAddClick} />
       <Artists
         artists={artists}
+        isLoadingArtists={isLoadingArtists}
         onRemoveArtist={handleAddClick}
         onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
       />
