@@ -3,7 +3,7 @@ export default function Track({ track, isListened, onToggleListened }) {
     <li>
       {track.name}
       <button type="button" onClick={onToggleListened}>
-        {!isListened ? "Set As Listened" : "Set as not listened"}
+        {!isListened ? "Set as Listened" : "Set as not listened"}
       </button>
     </li>
   );
