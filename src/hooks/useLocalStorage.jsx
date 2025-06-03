@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { getArtistsInfo } from "../util";
-export default function useLocalStorage(
-  token,
-  artists,
-  listenedSongs,
-  setArtists,
-  setListenedSongs
-) {
+export default function useLocalStorage(token) {
   const [localStorageLoaded, setLocalStorageLoaded] = useState(false);
   const [isLoadingArtists, setIsLoadingArtists] = useState(true);
+  const [artists, setArtists] = useState([]);
+  const [listenedSongs, setListenedSongs] = useState({});
   useEffect(() => {
     const fetchSavedArtists = async () => {
       const artistsIds = JSON.parse(savedArtists);
@@ -38,5 +34,11 @@ export default function useLocalStorage(
       localStorage.setItem("listenedSongs", JSON.stringify(listenedSongs));
     }
   }, [listenedSongs, localStorageLoaded]);
-  return { isLoadingArtists };
+  return {
+    artists,
+    listenedSongs,
+    setArtists,
+    setListenedSongs,
+    isLoadingArtists,
+  };
 }

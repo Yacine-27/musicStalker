@@ -9,17 +9,15 @@ import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [token, setToken] = useState(null);
-  const [artists, setArtists] = useState([]);
-  const [listenedSongs, setListenedSongs] = useState({});
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
-  const { isLoadingArtists } = useLocalStorage(
-    token,
+  const {
     artists,
     listenedSongs,
     setArtists,
-    setListenedSongs
-  );
+    setListenedSongs,
+    isLoadingArtists,
+  } = useLocalStorage(token);
 
   useEffect(() => {
     let ignore = false;
