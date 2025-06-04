@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
-import Search from "./components/Search";
+import Nav from "./components/Nav";
 import Artists from "./components/Artists";
 import Albums from "./components/Albums";
 import Tracks from "./components/Tracks";
@@ -43,8 +43,8 @@ function App() {
     setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
   return (
-    <div className="bg-slate-800 min-h-screen">
-      <Search accessToken={token} onAddArtist={handleAddClick} />
+    <div className="bg-gray-900 min-h-screen">
+      <Nav accessToken={token} onAddArtist={handleAddClick} />
       <Artists
         artists={artists}
         isLoadingArtists={isLoadingArtists}
