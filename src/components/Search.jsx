@@ -26,7 +26,7 @@ export default function Search({ accessToken, onAddArtist }) {
     }
   };
   return (
-    <div>
+    <div className="flex flex-col">
       <SearchBar onQueryChange={handleQueryChange} />
       <SearchResult
         isLoading={isLoading}

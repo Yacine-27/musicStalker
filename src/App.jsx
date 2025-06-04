@@ -43,7 +43,7 @@ function App() {
     setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
   return (
-    <>
+    <div className="bg-slate-800 min-h-screen">
       <Search accessToken={token} onAddArtist={handleAddClick} />
       <Artists
         artists={artists}
@@ -68,7 +68,7 @@ function App() {
           listenedSongs={listenedSongs}
         />
       )}
-    </>
+    </div>
   );
 }
 
