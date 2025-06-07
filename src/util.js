@@ -60,7 +60,24 @@ export const searchArtist = async (query, accessToken, limit) => {
     `${encodeURIComponent(query)}&type=artist&limit=${limit}`,
     accessToken
   );
-  return data;
+  const artists = data.artists.items.map((artist) => ({
+    name: artist.name,
+    id: artist.id,
+    image: getSmallestImg(artist.images) ?? "",
+  }));
+  console.log(artists);
+  return artists;
+};
+
+const getSmallestImg = (images) => {
+  if (!images) return "";
+  let imageIndex = 0;
+  images.forEach((image, index) => {
+    if (image.width < images[imageIndex] && image.url) {
+      imageIndex = index;
+    }
+  });
+  return images[imageIndex].url;
 };
 
 export const getArtistAlbums = async (accessToken, id) => {

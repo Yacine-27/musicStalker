@@ -43,8 +43,12 @@ function App() {
     setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
   return (
-    <div className="bg-gray-900 min-h-screen">
-      <Nav accessToken={token} onAddArtist={handleAddClick} />
+    <div className="min-h-screen bg-zinc-950 text-zinc-200">
+      <Nav
+        accessToken={token}
+        onAddArtist={handleAddClick}
+        savedArtists={artists}
+      />
       <Artists
         artists={artists}
         isLoadingArtists={isLoadingArtists}

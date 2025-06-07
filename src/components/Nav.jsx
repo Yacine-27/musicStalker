@@ -4,7 +4,7 @@ import SearchResult from "./SearchResults";
 import { searchArtist } from "../util";
 import { useState, useRef } from "react";
 
-export default function Nav({ accessToken, onAddArtist }) {
+export default function Nav({ accessToken, onAddArtist, savedArtists }) {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,12 +19,8 @@ export default function Nav({ accessToken, onAddArtist }) {
         return;
       }
       setIsLoading(true);
-      const data = await searchArtist(query, accessToken, 3);
-      setResults(
-        data.artists.items.map((artist) => {
-          return { name: artist.name, id: artist.id };
-        })
-      );
+      const artists = await searchArtist(query, accessToken, 3);
+      setResults(artists);
       setIsVisible(true);
       setIsLoading(false);
     } catch (e) {
@@ -41,7 +37,7 @@ export default function Nav({ accessToken, onAddArtist }) {
   };
 
   return (
-    <nav className="flex items-center justify-center bg-gray-800 py-4 px-2 text-amber-50">
+    <nav className="flex items-center justify-around py-4 px-2">
       <Logo />
       <div className="flex flex-col justify-center relative">
         <SearchBar ref={searchBarRef} onQueryChange={handleQueryChange} />
@@ -53,6 +49,7 @@ export default function Nav({ accessToken, onAddArtist }) {
           visible={isVisible}
           setVisible={setIsVisible}
           onAddArtist={handleAddArtist}
+          savedArtists={savedArtists}
         />
       </div>
     </nav>

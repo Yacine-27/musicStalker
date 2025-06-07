@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SearchResult from "./SearchResult";
 
-export default function SearchResult({
+export default function SearchResults({
   error,
   isLoading,
   results,
@@ -8,6 +10,7 @@ export default function SearchResult({
   inputRef,
   visible,
   setVisible,
+  savedArtists,
 }) {
   const resultsRef = useRef(null);
 
@@ -36,32 +39,46 @@ export default function SearchResult({
     };
   }, [inputRef, results, setVisible]);
 
-  if (isLoading) return <p>Loading ...</p>;
-  if (error) return <p>An error occurred: {error.message}</p>;
+  const showBox = isLoading || error || (visible && results.length > 0);
 
   return (
-    <div className="relative" ref={resultsRef}>
-      {visible && results.length > 0 && (
-        <div className="absolute border rounded-lg shadow-lg z-20 mt-6 mr-3 p-2 bg-white text-black">
-          <h4 className="font-semibold mb-2">Search Results:</h4>
-          <ul className="w-55">
-            {results.map((artist) => (
-              <li
-                key={artist.id}
-                className="flex justify-between items-center mb-1"
-              >
-                <span>{artist.name}</span>
-                <button
-                  onClick={() => onAddArtist(artist)}
-                  className="text-blue-500 hover:underline"
-                >
-                  Add Artist
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className="relative w-full" ref={resultsRef}>
+      <AnimatePresence>
+        {showBox && (
+          <motion.div
+            key="search-results"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="absolute left-0 right-0 border-2 border-zinc-400 rounded-lg shadow-lg z-20 mt-2 p-4 bg-zinc-800 text-zinc-200 w-full max-w-md min-h-[100px] overflow-hidden"
+          >
+            <h4 className="font-semibold mb-2">Search Results:</h4>
+
+            {isLoading ? (
+              <div className="flex justify-center items-center h-full">
+                <div className="h-6 w-6 border-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : error ? (
+              <p className="text-red-500 text-sm text-center">
+                An error occurred: {error.message}
+              </p>
+            ) : (
+              <ul className="flex flex-col space-y-2 gap-2">
+                {results.map((artist) => (
+                  <SearchResult
+                    key={artist.id}
+                    name={artist.name}
+                    image={artist.image}
+                    isAdded={savedArtists.find((a) => a.id === artist.id)}
+                    onAddArtist={() => onAddArtist(artist)}
+                  />
+                ))}
+              </ul>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
