@@ -1,5 +1,4 @@
 export default function SearchResult({ name, image, onAddArtist, isAdded }) {
-  console.log(image);
   return (
     <li className="flex justify-between items-center mb-1">
       <div className="flex gap-2 items-center">

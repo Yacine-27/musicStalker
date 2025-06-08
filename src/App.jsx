@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
+import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Artists from "./components/Artists";
 import Albums from "./components/Albums";
@@ -49,28 +50,37 @@ function App() {
         onAddArtist={handleAddClick}
         savedArtists={artists}
       />
-      <Artists
-        artists={artists}
-        isLoadingArtists={isLoadingArtists}
-        onRemoveArtist={handleAddClick}
-        onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
-      />
-      {artistAlbums.selectedItem && (
-        <Albums
-          albums={artistAlbums.data}
-          isLoading={artistAlbums.isLoading}
-          error={artistAlbums.error}
-          onSelectAlbum={(id) => albumTracks.showDetails(id, artistAlbums.data)}
-        />
-      )}
-      {albumTracks.selectedItem && (
-        <Tracks
-          tracks={albumTracks.data}
-          isLoading={albumTracks.isLoading}
-          error={albumTracks.error}
-          onToggleListened={handleToggleListened}
-          listenedSongs={listenedSongs}
-        />
+
+      {!artists || artists.length === 0 ? (
+        <Header />
+      ) : (
+        <>
+          <Artists
+            artists={artists}
+            isLoadingArtists={isLoadingArtists}
+            onRemoveArtist={handleAddClick}
+            onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
+          />
+          {artistAlbums.selectedItem && (
+            <Albums
+              albums={artistAlbums.data}
+              isLoading={artistAlbums.isLoading}
+              error={artistAlbums.error}
+              onSelectAlbum={(id) =>
+                albumTracks.showDetails(id, artistAlbums.data)
+              }
+            />
+          )}
+          {albumTracks.selectedItem && (
+            <Tracks
+              tracks={albumTracks.data}
+              isLoading={albumTracks.isLoading}
+              error={albumTracks.error}
+              onToggleListened={handleToggleListened}
+              listenedSongs={listenedSongs}
+            />
+          )}
+        </>
       )}
     </div>
   );

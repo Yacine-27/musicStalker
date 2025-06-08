@@ -65,19 +65,17 @@ export const searchArtist = async (query, accessToken, limit) => {
     id: artist.id,
     image: getSmallestImg(artist.images) ?? "",
   }));
-  console.log(artists);
   return artists;
 };
 
-const getSmallestImg = (images) => {
-  if (!images) return "";
-  let imageIndex = 0;
-  images.forEach((image, index) => {
-    if (image.width < images[imageIndex] && image.url) {
-      imageIndex = index;
-    }
-  });
-  return images[imageIndex].url;
+const getSmallestImg = (images = []) => {
+  if (!Array.isArray(images) || images.length === 0) return "";
+
+  const smallest = images
+    .filter((img) => img.url && typeof img.width === "number")
+    .reduce((min, img) => (img.width < min.width ? img : min), images[0]);
+
+  return smallest?.url || "";
 };
 
 export const getArtistAlbums = async (accessToken, id) => {
