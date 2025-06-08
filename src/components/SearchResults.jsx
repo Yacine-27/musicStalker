@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import SearchResult from "./SearchResult";
+import AnimationContainer from "./AnimationContainer";
 
 export default function SearchResults({
   error,
@@ -43,16 +43,9 @@ export default function SearchResults({
 
   return (
     <div className="relative w-full" ref={resultsRef}>
-      <AnimatePresence>
-        {showBox && (
-          <motion.div
-            key="search-results"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="absolute left-0 right-0 border-2 border-zinc-400 rounded-lg shadow-lg z-20 mt-2 p-4 bg-zinc-800 text-zinc-200 w-full max-w-md min-h-[100px] overflow-hidden"
-          >
+      {showBox && (
+        <AnimationContainer key={"searchResults"}>
+          <div className="absolute left-0 right-0 border-2 border-zinc-400 rounded-lg shadow-lg z-20 mt-2 p-4 bg-zinc-800 text-zinc-200 w-full max-w-md min-h-[100px] overflow-hidden">
             <h4 className="font-semibold mb-2">Search Results:</h4>
 
             {isLoading ? (
@@ -76,9 +69,9 @@ export default function SearchResults({
                 ))}
               </ul>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </AnimationContainer>
+      )}
     </div>
   );
 }

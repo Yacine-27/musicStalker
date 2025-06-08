@@ -1,3 +1,4 @@
+import SectionContainer from "./SectionContainer";
 import Track from "./Track";
 export default function Tracks({
   tracks,
@@ -6,11 +7,8 @@ export default function Tracks({
   listenedSongs,
   onToggleListened,
 }) {
-  if (isLoading) return <p>Loading tracks ...</p>;
-  if (error) return <p>{error.message}</p>;
   return (
-    <>
-      <h4>Tracks: </h4>
+    <SectionContainer name={"Tracks"} isLoading={isLoading} error={error}>
       <ul>
         {tracks.map((track) => (
           <Track
@@ -23,6 +21,6 @@ export default function Tracks({
           />
         ))}
       </ul>
-    </>
+    </SectionContainer>
   );
 }

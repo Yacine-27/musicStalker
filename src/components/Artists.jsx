@@ -1,18 +1,18 @@
+import SectionContainer from "./SectionContainer";
+import { trimString } from "../util";
 export default function Artists({
   artists,
   onRemoveArtist,
   onSelectArtist,
   isLoadingArtists,
 }) {
-  if (isLoadingArtists) return <p>Loading artists ...</p>;
   return (
-    <>
-      {artists.length > 0 && <h3>Artists : </h3>}
+    <SectionContainer name={"Artists"} isLoading={isLoadingArtists}>
       <ul>
         {artists.map((artist) => (
           <li key={artist.id}>
             {" "}
-            {artist.name}{" "}
+            {trimString(artist.name)}{" "}
             <button
               type="button"
               onClick={() => {
@@ -32,6 +32,6 @@ export default function Artists({
           </li>
         ))}
       </ul>
-    </>
+    </SectionContainer>
   );
 }

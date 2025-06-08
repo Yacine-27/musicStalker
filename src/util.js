@@ -32,7 +32,11 @@ const getArtist = async (id, accessToken) => {
   handleResponse(response);
 
   const data = await response.json();
-  return { name: data.name, id: data.id };
+  return {
+    name: data.name,
+    id: data.id,
+    image: getSmallestImg(data.images) ?? "",
+  };
 };
 
 export const getArtistsInfo = async (artistsIds, token) => {
@@ -111,4 +115,11 @@ export const getAlbumTracks = async (token, albumId) => {
 
 export const findById = (id, array) => {
   return array.find((item) => item.id === id);
+};
+
+export const trimString = (string = "") => {
+  if (string.length > 30) {
+    return string.slice(0, 27).padEnd(30, ".");
+  }
+  return string;
 };

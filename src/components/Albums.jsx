@@ -1,13 +1,12 @@
+import { trimString } from "../util";
+import SectionContainer from "./SectionContainer";
 export default function Albums({ isLoading, error, albums, onSelectAlbum }) {
-  if (error) return <p>{error.message}</p>;
-  if (isLoading) return <p>Loading albums ...</p>;
   return (
-    <>
-      <h4>Albums: </h4>
+    <SectionContainer name={"Albums"} isLoading={isLoading} error={error}>
       <ul>
         {albums.map((album) => (
           <li key={album.id}>
-            {album.name}{" "}
+            {trimString(album.name)}{" "}
             <button
               type="button"
               onClick={() => {
@@ -19,6 +18,6 @@ export default function Albums({ isLoading, error, albums, onSelectAlbum }) {
           </li>
         ))}
       </ul>
-    </>
+    </SectionContainer>
   );
 }

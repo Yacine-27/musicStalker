@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
+import { AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Artists from "./components/Artists";
@@ -10,6 +11,11 @@ import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [token, setToken] = useState(null);
+  const [showComponents, setShowComponents] = useState({
+    artists: true,
+    albums: true,
+    songs: true,
+  });
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
   const {
@@ -43,25 +49,35 @@ function App() {
   const handleToggleListened = (trackId) => {
     setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
+  const handleShowComponentChange = (component) => {
+    setShowComponents({
+      ...showComponents,
+      [component]: !showComponents[component],
+    });
+    console.log(showComponents);
+  };
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-200">
       <Nav
         accessToken={token}
         onAddArtist={handleAddClick}
         savedArtists={artists}
+        showComponents={showComponents}
+        onShowComponentChange={handleShowComponentChange}
       />
-
       {!artists || artists.length === 0 ? (
         <Header />
       ) : (
-        <>
-          <Artists
-            artists={artists}
-            isLoadingArtists={isLoadingArtists}
-            onRemoveArtist={handleAddClick}
-            onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
-          />
-          {artistAlbums.selectedItem && (
+        <div className="flex flex-wrap gap-2 justify-around">
+          {showComponents.artists && (
+            <Artists
+              artists={artists}
+              isLoadingArtists={isLoadingArtists}
+              onRemoveArtist={handleAddClick}
+              onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
+            />
+          )}
+          {showComponents.albums && artistAlbums.selectedItem && (
             <Albums
               albums={artistAlbums.data}
               isLoading={artistAlbums.isLoading}
@@ -71,7 +87,7 @@ function App() {
               }
             />
           )}
-          {albumTracks.selectedItem && (
+          {showComponents.songs && albumTracks.selectedItem && (
             <Tracks
               tracks={albumTracks.data}
               isLoading={albumTracks.isLoading}
@@ -80,7 +96,7 @@ function App() {
               listenedSongs={listenedSongs}
             />
           )}
-        </>
+        </div>
       )}
     </div>
   );
