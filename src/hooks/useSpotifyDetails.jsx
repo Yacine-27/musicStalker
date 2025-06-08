@@ -1,34 +1,32 @@
 import { useState } from "react";
-import { findById } from "../util";
-
-const useSpotifyDetails = (fetchFn) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+export default function useSpotifyDetails(fetchFn) {
   const [data, setData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const showDetails = async (id, sourceList = []) => {
+  const showDetails = async (id, list) => {
+    const selected = list.find((item) => item.id === id);
+    if (!selected) return;
+    setSelectedItem(selected);
+    setIsLoading(true);
+    setError(null);
     try {
-      setIsLoading(true);
-      setError(null);
-      const response = await fetchFn(id);
-      setData(response);
-      setSelectedItem(findById(id, sourceList));
-    } catch (e) {
-      setError(e);
-      console.error(e);
+      const result = await fetchFn(id);
+      setData(result);
+    } catch (err) {
+      setError(err.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return {
-    selectedItem,
-    data,
-    isLoading,
-    error,
-    showDetails,
+  const clearDetails = () => {
+    setSelectedItem(null);
+    setData([]);
+    setError(null);
+    setIsLoading(false);
   };
-};
 
-export default useSpotifyDetails;
+  return { data, selectedItem, isLoading, error, showDetails, clearDetails };
+}

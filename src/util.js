@@ -93,6 +93,7 @@ export const getArtistAlbums = async (accessToken, id) => {
   return data.items.map((album) => ({
     id: album.id,
     name: album.name,
+    image: getSmallestImg(album.images),
   }));
 };
 
@@ -118,8 +119,8 @@ export const findById = (id, array) => {
 };
 
 export const trimString = (string = "") => {
-  if (string.length > 30) {
-    return string.slice(0, 27).padEnd(30, ".");
+  if (string.length > 20) {
+    return string.slice(0, 18).padEnd(20, ".");
   }
   return string;
 };

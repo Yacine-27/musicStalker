@@ -1,21 +1,29 @@
 import AnimationContainer from "./AnimationContainer";
 import { AnimatePresence } from "framer-motion";
 
-export default function SectionContainer({ name, error, isLoading, children }) {
+export default function SectionContainer({
+  name,
+  error,
+  isLoading,
+  children,
+  className = "",
+}) {
   return (
     <AnimatePresence>
       <AnimationContainer name={name}>
-        <div className="flex flex-col gap-2 bg-zinc-800 rounded-xl p-2">
-          <div className="flex gap-2 justify-between px-2">
-            <h4 className="text-2xl text-white font-bold">{name}:</h4>
+        <div
+          className={`flex flex-col gap-3 bg-zinc-800 rounded-2xl shadow-md p-4 ${className}`}
+        >
+          <div className="flex justify-between items-center px-1 mb-2">
+            <h4 className="text-xl font-semibold text-white">{name}</h4>
           </div>
 
           {error ? (
-            <p>
+            <p className="text-red-400">
               Error loading {name} : {error}
             </p>
           ) : isLoading ? (
-            <p>{"Loading {name}".padEnd(30, ".")}</p>
+            <p className="italic text-zinc-400">{"Loading " + name + "..."}</p>
           ) : (
             children
           )}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
-import { AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Artists from "./components/Artists";
@@ -11,11 +10,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [token, setToken] = useState(null);
-  const [showComponents, setShowComponents] = useState({
-    artists: true,
-    albums: true,
-    songs: true,
-  });
+
   const artistAlbums = useSpotifyDetails((id) => getArtistAlbums(token, id));
   const albumTracks = useSpotifyDetails((id) => getAlbumTracks(token, id));
   const {
@@ -40,63 +35,67 @@ function App() {
 
   const handleAddClick = (artist) => {
     const exists = artists.find((a) => a.id === artist.id);
+
     if (exists) {
-      setArtists(artists.filter((a) => a.id !== artist.id));
+      const updatedArtists = artists.filter((a) => a.id !== artist.id);
+      setArtists(updatedArtists);
+
+      if (artistAlbums.selectedItem?.id === artist.id) {
+        artistAlbums.clearDetails();
+        albumTracks.clearDetails();
+      }
     } else {
       setArtists([...artists, artist]);
     }
   };
+
   const handleToggleListened = (trackId) => {
     setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
   };
-  const handleShowComponentChange = (component) => {
-    setShowComponents({
-      ...showComponents,
-      [component]: !showComponents[component],
-    });
-    console.log(showComponents);
-  };
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-200">
+    <div className="min-h-screen flex flex-col bg-zinc-950 text-zinc-200">
       <Nav
         accessToken={token}
         onAddArtist={handleAddClick}
         savedArtists={artists}
-        showComponents={showComponents}
-        onShowComponentChange={handleShowComponentChange}
       />
       {!artists || artists.length === 0 ? (
         <Header />
       ) : (
-        <div className="flex flex-wrap gap-2 justify-around">
-          {showComponents.artists && (
+        <main className="flex flex-grow overflow-x-auto gap-4 px-4 py-6 sm:justify-center">
+          <div className="min-w-[300px] w-full sm:w-[320px]">
             <Artists
               artists={artists}
               isLoadingArtists={isLoadingArtists}
               onRemoveArtist={handleAddClick}
               onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
             />
+          </div>
+          {artistAlbums.selectedItem && (
+            <div className="min-w-[300px] w-full sm:w-[320px]">
+              <Albums
+                albums={artistAlbums.data}
+                isLoading={artistAlbums.isLoading}
+                error={artistAlbums.error}
+                onSelectAlbum={(id) =>
+                  albumTracks.showDetails(id, artistAlbums.data)
+                }
+              />
+            </div>
           )}
-          {showComponents.albums && artistAlbums.selectedItem && (
-            <Albums
-              albums={artistAlbums.data}
-              isLoading={artistAlbums.isLoading}
-              error={artistAlbums.error}
-              onSelectAlbum={(id) =>
-                albumTracks.showDetails(id, artistAlbums.data)
-              }
-            />
+          {albumTracks.selectedItem && (
+            <div className="min-w-[300px] w-full sm:w-[320px]">
+              <Tracks
+                tracks={albumTracks.data}
+                isLoading={albumTracks.isLoading}
+                error={albumTracks.error}
+                onToggleListened={handleToggleListened}
+                listenedSongs={listenedSongs}
+              />
+            </div>
           )}
-          {showComponents.songs && albumTracks.selectedItem && (
-            <Tracks
-              tracks={albumTracks.data}
-              isLoading={albumTracks.isLoading}
-              error={albumTracks.error}
-              onToggleListened={handleToggleListened}
-              listenedSongs={listenedSongs}
-            />
-          )}
-        </div>
+        </main>
       )}
     </div>
   );

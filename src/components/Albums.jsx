@@ -1,21 +1,17 @@
-import { trimString } from "../util";
 import SectionContainer from "./SectionContainer";
+import AlbumCard from "./AlbumCard";
 export default function Albums({ isLoading, error, albums, onSelectAlbum }) {
   return (
     <SectionContainer name={"Albums"} isLoading={isLoading} error={error}>
-      <ul>
+      <ul className="flex flex-col gap-2">
         {albums.map((album) => (
-          <li key={album.id}>
-            {trimString(album.name)}{" "}
-            <button
-              type="button"
-              onClick={() => {
-                onSelectAlbum(album.id);
-              }}
-            >
-              Show songs
-            </button>
-          </li>
+          <AlbumCard
+            key={album.id}
+            album={album}
+            onSelect={() => {
+              onSelectAlbum(album.id);
+            }}
+          />
         ))}
       </ul>
     </SectionContainer>

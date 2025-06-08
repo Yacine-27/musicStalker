@@ -1,5 +1,5 @@
 import SectionContainer from "./SectionContainer";
-import Track from "./Track";
+import TrackCard from "./TrackCard";
 export default function Tracks({
   tracks,
   isLoading,
@@ -9,13 +9,13 @@ export default function Tracks({
 }) {
   return (
     <SectionContainer name={"Tracks"} isLoading={isLoading} error={error}>
-      <ul>
+      <ul className="flex flex-col gap-2">
         {tracks.map((track) => (
-          <Track
+          <TrackCard
             key={track.id}
             track={track}
             isListened={listenedSongs[track.id] ? true : false}
-            onToggleListened={() => {
+            onToggle={() => {
               onToggleListened(track.id);
             }}
           />
