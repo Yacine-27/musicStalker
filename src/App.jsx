@@ -50,7 +50,11 @@ function App() {
   };
 
   const handleToggleListened = (trackId) => {
-    setListenedSongs({ ...listenedSongs, [trackId]: !listenedSongs[trackId] });
+    const exists = listenedSongs.find((id) => id === trackId);
+    if (exists) setListenedSongs(listenedSongs.filter((id) => id !== trackId));
+    else {
+      setListenedSongs([...listenedSongs, trackId]);
+    }
   };
 
   return (
@@ -69,7 +73,10 @@ function App() {
               artists={artists}
               isLoadingArtists={isLoadingArtists}
               onRemoveArtist={handleAddClick}
-              onSelectArtist={(id) => artistAlbums.showDetails(id, artists)}
+              onSelectArtist={(id) => {
+                artistAlbums.showDetails(id, artists);
+                albumTracks.clearDetails();
+              }}
             />
           </div>
           {artistAlbums.selectedItem && (

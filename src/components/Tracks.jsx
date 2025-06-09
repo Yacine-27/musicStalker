@@ -14,7 +14,7 @@ export default function Tracks({
           <TrackCard
             key={track.id}
             track={track}
-            isListened={listenedSongs[track.id] ? true : false}
+            isListened={listenedSongs.find((id) => id === track.id)}
             onToggle={() => {
               onToggleListened(track.id);
             }}
