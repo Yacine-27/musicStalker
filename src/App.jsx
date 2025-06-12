@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getToken, getArtistAlbums, getAlbumTracks } from "./util";
+import { getToken, getArtistAlbums, getAlbumTracks } from "./utilities/util";
 import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Artists from "./components/Artists";
@@ -83,6 +83,7 @@ function App() {
             <div className="min-w-[300px] w-full sm:w-[320px]">
               <Albums
                 albums={artistAlbums.data}
+                listenedSongs={listenedSongs}
                 isLoading={artistAlbums.isLoading}
                 error={artistAlbums.error}
                 onSelectAlbum={(id) =>

@@ -1,7 +1,7 @@
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 import SearchResult from "./SearchResults";
-import { searchArtist } from "../util";
+import { searchArtist } from "../utilities/util";
 import { useState, useRef } from "react";
 
 export default function Nav({ accessToken, onAddArtist, savedArtists }) {

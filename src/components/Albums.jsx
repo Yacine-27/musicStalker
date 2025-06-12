@@ -1,5 +1,6 @@
 import SectionContainer from "./SectionContainer";
 import AlbumCard from "./AlbumCard";
+
 export default function Albums({ isLoading, error, albums, onSelectAlbum }) {
   return (
     <SectionContainer name={"Albums"} isLoading={isLoading} error={error}>
@@ -8,6 +9,7 @@ export default function Albums({ isLoading, error, albums, onSelectAlbum }) {
           <AlbumCard
             key={album.id}
             album={album}
+            // listenRatio={getAlbumListenRatio(album, listenedSongs)}
             onSelect={() => {
               onSelectAlbum(album.id);
             }}

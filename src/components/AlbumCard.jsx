@@ -1,4 +1,4 @@
-import { trimString } from "../util";
+import { trimString } from "../utilities/util";
 
 export default function AlbumCard({ album, onSelect }) {
   return (

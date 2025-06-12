@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getArtistsInfo } from "../util";
+import { getArtistsInfo } from "../utilities/util";
 
 export default function useLocalStorage(token) {
   const [localStorageLoaded, setLocalStorageLoaded] = useState(false);

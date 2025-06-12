@@ -1,4 +1,4 @@
-import { trimString } from "../util";
+import { trimString } from "../utilities/util";
 export default function ArtistCard({ artist, onSelect, onRemove }) {
   return (
     <li className="flex items-center gap-3 bg-zinc-700 rounded-xl p-3 hover:bg-zinc-600 transition">
